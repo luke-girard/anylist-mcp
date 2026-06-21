@@ -23,6 +23,7 @@ COPY package.json ./
 
 # Persistent data directory (SQLite DB) and config directory (allowed-emails.txt)
 RUN mkdir -p /data /config
+COPY config/allowed-emails.txt /config/allowed-emails.txt
 VOLUME /data
 ENV DATA_DIR=/data
 ENV NODE_ENV=production
