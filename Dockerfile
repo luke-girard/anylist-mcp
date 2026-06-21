@@ -15,10 +15,10 @@ RUN apk add --no-cache python3 make g++
 COPY --from=deps /app/node_modules ./node_modules
 COPY src/ ./src/
 COPY scripts/ ./scripts/
-COPY anylist-js/ ./anylist-js/
-# Fail fast if the submodule wasn't initialized before building
-RUN test -f anylist-js/lib/index.js || \
-    { echo "ERROR: anylist-js submodule is missing. Run: git submodule update --init" && exit 1; }
+RUN apk add --no-cache git
+RUN git clone https://github.com/bobby060/anylist-js.git anylist-js
+RUN cd anylist-js && git checkout ad939a3d8fec390c2cf390f5f318ca765f3df991 && rm -rf .git
+RUN test -f anylist-js/lib/index.js || { echo "ERROR: anylist-js clone failed (lib/index.js missing)" && exit 1; }
 COPY package.json ./
 
 # Persistent data directory (SQLite DB) and config directory (allowed-emails.txt)
